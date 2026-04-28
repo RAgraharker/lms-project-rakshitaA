@@ -3,7 +3,12 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CoursePage from "./pages/CoursePage";
 import CourseModal from "./components/CourseModal";
-
+import AnalyticsPage from "./pages/AnalyticsPage";
+import LearningPage from "./pages/LearningPage";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import AdminUsers from './pages/AdminUsers';
 
 // ✅ Protected Route
 const ProtectedRoute = ({ children }) => {
@@ -20,21 +25,47 @@ function App() {
   return (
     <Router>
       <Routes>
-<Route path="/course/:id" element={<CourseModal />} />
-        <Route path="/" element={<Login />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+  <Route path="/" element={<Login />} />
+<Route
+  path="/learning/:id"
+  element={<LearningPage />}
+/>
+  <Route
+    path="/analytics"
+    element={<AnalyticsPage />}
+  />
+<Route path="/register" element={<Register />} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route
+  path="/reset-password/:uid/:token"
+  element={<ResetPassword />}
+/>
 
-        <Route path="*" element={<Navigate to="/" />} />
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    }
+  />
+<Route
+  path="/admin-users"
+  element={<AdminUsers />}
+/>
 
-      </Routes>
+  <Route
+    path="/course/:id"
+    element={<CoursePage />}
+  />
+
+  <Route
+    path="*"
+    element={<Navigate to="/" />}
+  />
+
+</Routes>
     </Router>
   );
 }

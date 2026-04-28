@@ -194,7 +194,10 @@ export default function Login() {
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.role);
-
+localStorage.setItem(
+  "username",
+  res.data.username
+);
       navigate("/dashboard");
     } catch (err) {
       console.log(err.response?.data);
@@ -235,7 +238,7 @@ export default function Login() {
         >
           Login
         </button>
-
+<p className="text-center mt-4"> Don’t have an account?{" "} <span onClick={() => navigate("/register")} className="text-blue-500 cursor-pointer" > Register </span> </p> <p className="text-center mt-2"> <span onClick={() => navigate("/forgot-password") } className="text-blue-500 cursor-pointer" > Forgot Password? </span> </p>
       </div>
     </div>
   );

@@ -36,12 +36,7 @@ export default function CourseModal() {
       <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
 
       {/* 📺 Video */}
-      <iframe
-        src={course.youtube_link}
-        title={course.title}
-        className="w-full h-[400px] mb-6 rounded-lg"
-        allowFullScreen
-      ></iframe>
+     
 
       {/* 📝 Description */}
       <p className="text-gray-600 mb-6">{course.description}</p>

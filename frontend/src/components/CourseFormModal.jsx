@@ -58,12 +58,17 @@ export default function CourseFormModal({ onClose, course, refresh }) {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
 
-        <input
-          value={form.youtube_link}
-          placeholder="YouTube Link"
-          className="w-full mb-4 border p-2"
-          onChange={(e) => setForm({ ...form, youtube_link: e.target.value })}
-        />
+      <input
+  type="text"
+  placeholder="Tag Link"
+  value={form.youtube_link}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      youtube_link: e.target.value,
+    })
+  }
+/>
 
         <button
           onClick={handleSubmit}

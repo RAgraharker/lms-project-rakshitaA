@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.db.models import Count
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -72,7 +74,16 @@ def login_user(request):
         status=401
     )
 
+def create_admin(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser(
+            'admin',
+            'admin@gmail.com',
+            'admin123'
+        )
+        return HttpResponse("Admin created")
 
+    return HttpResponse("Admin already exists")
 # =========================
 # GET COURSES
 # =========================

@@ -25,7 +25,8 @@ from .views import (
     delete_user,
     admin_add_user,
     open_lesson,
-    delete_module
+    delete_module,
+    create_admin,
     
     
     
@@ -52,7 +53,7 @@ urlpatterns = [
     path('add-course/', add_course),
     path('update-course/<int:pk>/', update_course),
     path('delete-course/<int:pk>/', delete_course),
-
+    path('create-admin/', create_admin),
     path('enroll/<int:pk>/', enroll_course),
     path('analytics/', analytics_dashboard),
 

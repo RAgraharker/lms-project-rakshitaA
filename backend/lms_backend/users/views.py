@@ -705,7 +705,7 @@ def forgot_password(request):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
 
-    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "https://lms-project-rakshitaa.onrender.com")
 
     reset_link = f"{FRONTEND_URL}/reset-password/{uid}/{token}/"
 

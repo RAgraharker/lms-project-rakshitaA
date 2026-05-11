@@ -17,7 +17,7 @@ export default function Register() {
       alert("Registered Successfully");
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.error || "Registration failed");
+      alert(err.response?.data?.error || err.response?.data?.detail || "Registration failed");
     }
   };
 
@@ -91,7 +91,6 @@ export default function Register() {
             >
               <option value="student">Student</option>
               <option value="instructor">Instructor</option>
-              <option value="super_admin">Super Admin</option>
             </select>
           </div>
 

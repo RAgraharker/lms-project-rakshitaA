@@ -19,10 +19,10 @@ export default function Login() {
 
       console.log("LOGIN:", res.data);
 
-      sessionStorage.setItem("token", res.data.access);
-      sessionStorage.setItem("refresh", res.data.refresh);
-      sessionStorage.setItem("role", res.data.role);
-      sessionStorage.setItem("username", res.data.username);
+      localStorage.setItem("token", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
+      localStorage.setItem("role", res.data.role);
+      localStorage.setItem("username", res.data.username);
 
       navigate("/dashboard");
     } catch (err) {

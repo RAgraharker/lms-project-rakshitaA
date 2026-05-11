@@ -369,7 +369,7 @@ export default function Dashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editCourse, setEditCourse] = useState(null);
 
-  const role = sessionStorage.getItem("role");
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
 
   const fetchCourses = async () => {
@@ -390,7 +390,7 @@ export default function Dashboard() {
   }, []);
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.href = "/";
   };
 

@@ -17,6 +17,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 import os
+from django.http import HttpResponse
 from decouple import config
 from .serializers import UserSerializer
 from .models import (
@@ -42,7 +43,8 @@ from .serializers import (
 
 
 
-
+def home(request):
+    return HttpResponse("LMS Backend Running Successfully")
 # =========================
 # LOGIN
 # =========================

@@ -26,7 +26,7 @@ from .views import (
     admin_add_user,
     open_lesson,
     delete_module,
-    create_admin,
+    create_admin,home,
     
     
     
@@ -48,7 +48,7 @@ urlpatterns = [
 
     path('forgot-password/', forgot_password),
     path('reset-password/<uidb64>/<token>/', reset_password),
-
+    path('', home),
     path('courses/', get_courses),
     path('add-course/', add_course),
     path('update-course/<int:pk>/', update_course),

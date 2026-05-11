@@ -23,7 +23,9 @@ from .views import (
     reset_password,
     get_all_users,
     delete_user,
-    admin_add_user
+    admin_add_user,
+    open_lesson,
+    delete_module
     
     
     
@@ -40,70 +42,37 @@ class MyTokenView(TokenObtainPairView):
 
 
 urlpatterns = [
-    # 🔐 AUTH
     path('login/', MyTokenView.as_view(), name='login'),
     path('register/', register_user),
-    path('delete-course/<int:pk>/', delete_course),
-    # 📚 COURSES
+
+    path('forgot-password/', forgot_password),
+    path('reset-password/<uidb64>/<token>/', reset_password),
+
     path('courses/', get_courses),
     path('add-course/', add_course),
     path('update-course/<int:pk>/', update_course),
+    path('delete-course/<int:pk>/', delete_course),
+
     path('enroll/<int:pk>/', enroll_course),
     path('analytics/', analytics_dashboard),
+
+    path('lessons/<int:course_id>/', get_lessons),
+    path('add-module/', add_module),
+    path('add-lesson/', add_lesson),
+    path('update-lesson/<int:lesson_id>/', update_lesson),
+    path('delete-lesson/<int:pk>/', delete_lesson),
+
+    path('course-structure/<int:course_id>/', get_course_structure),
+    path('complete-lesson/<int:lesson_id>/', complete_lesson),
+
+    path('announcements/<int:course_id>/', get_announcements),
+    path('add-announcement/', add_announcement),
+
+    path('all-users/', get_all_users),
+    path('delete-user/<int:pk>/', delete_user),
+    path('admin-add-user/', admin_add_user),
     path(
-    'lessons/<int:course_id>/',
-    get_lessons
-),
-path(
-    'add-module/',
-    add_module
-),
-
-path(
-    'add-lesson/',
-    add_lesson
-),
-
-path(
-    'update-lesson/<int:lesson_id>/',
-    update_lesson
-),
-path(
-    'delete-lesson/<int:pk>/',
-    delete_lesson
-),
-
-path(
-    'course-structure/<int:course_id>/',
-    get_course_structure
-),
-
-path(
-    'complete-lesson/<int:lesson_id>/',
-    complete_lesson
-),
-
-path(
-    'announcements/<int:course_id>/',
-    get_announcements
-),
-
-path(
-    'add-announcement/',
-    add_announcement
-),
-path('register/', register_user),
-path('login/', login_user),
-path('forgot-password/', forgot_password),
-path(
-    'reset-password/<uidb64>/<token>/',
-    reset_password
-),
-path('all-users/', get_all_users),
-
-path('delete-user/<int:pk>/', delete_user),
-
-path('admin-add-user/', admin_add_user),
-
-
+    'open-lesson/<int:lesson_id>/',
+    open_lesson),
+    path('delete-module/<int:pk>/', delete_module),
 ]

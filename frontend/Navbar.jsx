@@ -6,7 +6,7 @@ export default function Navbar() {
 
   return (
     <div className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow">
-      <h1 className="text-xl font-bold">🎓 LMS</h1>
+      <h1 className="text-xl font-bold">🎓 lms</h1>
 
       <button
         onClick={handleLogout}

@@ -1,20 +1,20 @@
 <!-- Software Requirements Specification (SRS) 
-Learning Management System (LMS) 
-Prepared for: LMS Project 
+Learning Management System (lms) 
+Prepared for: lms Project 
 Version: 1.0 
 1. Introduction 
 1.1 Purpose 
 This document describes the Software Requirements Specification (SRS) for a Simple and 
-Secure Learning Management System (LMS).  
+Secure Learning Management System (lms).  
 The purpose is to define functional and non-functional requirements clearly for 
 development and implementation. 
 1.2 Scope 
-The LMS allows Admin/Trainers to upload course videos via YouTube links and Students to 
+The lms allows Admin/Trainers to upload course videos via YouTube links and Students to 
 securely access and watch videos. 
 The system ensures simplicity for students and reasonable security controls. 
 2. Overall Description 
 2.1 Product Perspective 
-The LMS is a web-based application accessible via modern browsers. 
+The lms is a web-based application accessible via modern browsers. 
 2.2 User Classes - Admin: Full system access - Trainer: Course and video management - Student: View-only access to assigned courses 
 2.3 Operating Environment - Web browsers (Chrome, Edge, Firefox) - Desktop and Mobile devices 
 3. Functional Requirements 

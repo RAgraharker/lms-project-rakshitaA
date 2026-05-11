@@ -64,7 +64,7 @@ function App() {
     path="*"
     element={<Navigate to="/" />}
   />
-
+<Route path="/dashboard" element={<Dashboard />} />
 </Routes>
     </Router>
   );

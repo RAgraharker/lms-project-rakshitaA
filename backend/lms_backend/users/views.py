@@ -1,5 +1,8 @@
 
+
+
 from rest_framework.decorators import api_view, permission_classes
+
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -35,24 +38,7 @@ from .serializers import (
 
 
 
-# =========================
-# REGISTER
-# =========================
-@api_view(['POST'])
-def register_user(request):
 
-    data = request.data
-
-    user = User.objects.create_user(
-        username=data.get("username"),
-        password=data.get("password"),
-        role=data.get("role", "student")
-    )
-
-    return Response({
-        "message": "User registered successfully",
-        "username": user.username
-    })
 
 
 # =========================
@@ -116,7 +102,7 @@ def get_courses(request):
             "description": course.description,
             "youtube_link": course.youtube_link,
             "created_by": course.created_by.id,
-            "enrolled": enrolled,
+            "is_enrolled": enrolled,
         })
 
     return Response(data)
@@ -210,25 +196,25 @@ def delete_course(request, pk):
         course = Course.objects.get(id=pk)
 
     except Course.DoesNotExist:
+        return Response({"error": "Course not found"}, status=404)
+
+    # ✅ Restrict roles
+    if request.user.role not in ["instructor", "super_admin"]:
         return Response(
-            {"error": "Course not found"},
-            status=404
+            {"error": "Only instructors/admins can delete"},
+            status=403
         )
 
+    # ✅ Instructor restriction
     if (
         request.user.role == "instructor"
         and course.created_by != request.user
     ):
-        return Response(
-            {"error": "Unauthorized"},
-            status=403
-        )
+        return Response({"error": "Unauthorized"}, status=403)
 
     course.delete()
 
-    return Response({
-        "message": "Course deleted"
-    })
+    return Response({"message": "Course deleted"})
 
 
 # =========================
@@ -382,7 +368,20 @@ def get_course_structure(request, course_id):
         many=True
     )
 
-    return Response(serializer.data)
+    # ✅ GET PROGRESS
+    try:
+        enrollment = Enrollment.objects.get(
+            student=request.user,
+            course_id=course_id
+        )
+        progress = enrollment.progress
+    except:
+        progress = 0
+
+    return Response({
+        "modules": serializer.data,
+        "progress": progress
+    })
 
 
 # =========================
@@ -426,12 +425,23 @@ def get_lessons(request, course_id):
         module__course_id=course_id
     ).order_by('module', 'order')
 
-    serializer = LessonSerializer(
-        lessons,
-        many=True
-    )
+    data = []
 
-    return Response(serializer.data)
+    for lesson in lessons:
+        completed = LessonProgress.objects.filter(
+            student=request.user,
+            lesson=lesson,
+            completed=True
+        ).exists()
+
+        data.append({
+            "id": lesson.id,
+            "title": lesson.title,
+            "video_url": lesson.video_url,
+            "completed": completed   # 🔥 IMPORTANT
+        })
+
+    return Response(data)
 
 
 # =========================
@@ -518,22 +528,33 @@ def complete_lesson(request, lesson_id):
 
     try:
         lesson = Lesson.objects.get(id=lesson_id)
-
     except Lesson.DoesNotExist:
-        return Response(
-            {"error": "Lesson not found"},
-            status=404
-        )
+        return Response({"error": "Lesson not found"}, status=404)
 
-    progress, created = LessonProgress.objects.get_or_create(
+    # ❌ DO NOT create automatically
+    progress = LessonProgress.objects.filter(
         student=request.user,
         lesson=lesson
-    )
+    ).first()
 
+    # ✅ BLOCK IF NOT OPENED
+    if not progress:
+        return Response({
+            "error": "Open lesson first"
+        }, status=400)
+
+    # ✅ PREVENT DOUBLE COMPLETE
+    if progress.completed:
+        return Response({
+            "message": "Already completed"
+        })
+
+    # mark complete
     progress.completed = True
     progress.completed_at = timezone.now()
     progress.save()
 
+    # calculate progress
     total_lessons = Lesson.objects.filter(
         module__course=lesson.module.course
     ).count()
@@ -548,7 +569,7 @@ def complete_lesson(request, lesson_id):
         (completed_lessons / total_lessons) * 100
     )
 
-    enrollment = Enrollment.objects.get(
+    enrollment, created = Enrollment.objects.get_or_create(
         student=request.user,
         course=lesson.module.course
     )
@@ -564,8 +585,6 @@ def complete_lesson(request, lesson_id):
         "message": "Lesson completed",
         "progress": percentage
     })
-
-
 # =========================
 # GET ANNOUNCEMENTS
 # =========================
@@ -644,39 +663,32 @@ def register_user(request):
 @api_view(['POST'])
 def forgot_password(request):
 
-    username = request.data.get("username")
+    email = request.data.get("email")
+
+    if not email:
+        return Response({
+            "error": "Email is required"
+        }, status=400)
 
     try:
-        user = User.objects.get(username=username)
-
+        user = User.objects.get(username=email)  # username = email
     except User.DoesNotExist:
         return Response({
             "error": "User not found"
         }, status=404)
 
-    uid = urlsafe_base64_encode(
-        force_bytes(user.pk)
-    )
-
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
 
-  
-    FRONTEND_URL = os.getenv(
-    "FRONTEND_URL",
-    "http://localhost:5173"
-)
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
-    reset_link = (
-    f"{FRONTEND_URL}/reset-password/{uid}/{token}/"
-)
-
-
+    reset_link = f"{FRONTEND_URL}/reset-password/{uid}/{token}/"
 
     send_mail(
         subject="LMS Password Reset",
         message=f"Click here to reset password:\n{reset_link}",
         from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[user.username],
+        recipient_list=[user.username],  # email
         fail_silently=False,
     )
 
@@ -814,3 +826,24 @@ def admin_add_user(request):
         "message": "User added successfully"
     })
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def open_lesson(request, lesson_id):
+
+    try:
+        lesson = Lesson.objects.get(id=lesson_id)
+    except Lesson.DoesNotExist:
+        return Response({"error": "Lesson not found"}, status=404)
+
+    LessonProgress.objects.get_or_create(
+        student=request.user,
+        lesson=lesson
+    )
+
+    return Response({"message": "Lesson opened"})
+
+@api_view(['DELETE'])
+def delete_module(request, pk):
+    module = Module.objects.get(id=pk)
+    module.delete()
+    return Response({"message": "Module deleted"})

@@ -8,7 +8,6 @@ export default function CourseFormModal({ onClose, course, refresh }) {
     youtube_link: "",
   });
 
-  // ✅ Pre-fill when editing
   useEffect(() => {
     if (course) {
       setForm({
@@ -19,17 +18,22 @@ export default function CourseFormModal({ onClose, course, refresh }) {
     }
   }, [course]);
 
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
+
   const handleSubmit = async () => {
     try {
       if (course) {
-        // ✏️ UPDATE
         await API.put(`/users/update-course/${course.id}/`, form);
       } else {
-        // ➕ ADD
         await API.post("/users/add-course/", form);
       }
-
-      refresh();   // 🔄 reload dashboard
+      refresh();
       onClose();
     } catch (err) {
       console.log(err);
@@ -37,45 +41,70 @@ export default function CourseFormModal({ onClose, course, refresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded w-[400px]">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-8">
 
-        <h2 className="font-bold mb-4">
-          {course ? "Edit Course" : "Add Course"}
-        </h2>
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            
+            <h2 className="text-2xl font-bold text-white">
+              {course ? "Edit " : "Add "}{" "}
+              <span className="text-indigo-400">Course.</span>
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all text-lg leading-none"
+          >
+            ✕
+          </button>
+        </div>
 
-        <input
-          value={form.title}
-          placeholder="Title"
-          className="w-full mb-2 border p-2"
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-        />
+        {/* Fields */}
+        <div className="space-y-5">
 
-        <input
-          value={form.description}
-          placeholder="Description"
-          className="w-full mb-2 border p-2"
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-        />
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+              Title
+            </label>
+            <input
+              value={form.title}
+              placeholder="e.g. Introduction to React"
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
+          </div>
 
-      <input
-  type="text"
-  placeholder="Tag Link"
-  value={form.youtube_link}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      youtube_link: e.target.value,
-    })
-  }
-/>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+              Description
+            </label>
+            <input
+              value={form.description}
+              placeholder="Brief course description"
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+            />
+          </div>
 
-        <button
-          onClick={handleSubmit}
-          className="bg-black text-white px-4 py-2 rounded w-full"
-        >
-          Save
-        </button>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-3 mt-8">
+          <button
+            onClick={onClose}
+            className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-3 rounded-xl text-sm transition-all duration-150"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="flex-1 bg-indigo-500 hover:bg-indigo-400 active:scale-[0.98] text-white font-semibold py-3 rounded-xl text-sm transition-all duration-150"
+          >
+            {course ? "Save Changes" : "Add Course"}
+          </button>
+        </div>
 
       </div>
     </div>

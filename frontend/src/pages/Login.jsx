@@ -1,174 +1,3 @@
-// // import { useState } from "react";
-// // import API from "../services/api";
-
-// // export default function Login() {
-// //   const [form, setForm] = useState({
-// //     username: "",
-// //     password: "",
-// //   });
-
-// //   const handleLogin = async () => {
-// //   try {
-// //     const res = await API.post("/users/login/", form);
-
-// //     console.log(res.data); // 👈 ADD THIS
-
-// //     localStorage.setItem("token", res.data.access);
-
-// //     window.location.href = "/dashboard";
-// //   } catch (err) {
-// //     console.log(err);
-// //     alert("Login failed");
-// //   }
-// // };
-
-// //   return (
-// //     <div>
-// //       <h2>Login</h2>
-
-// //       <input placeholder="Username"
-// //         onChange={(e) => setForm({...form, username: e.target.value})}
-// //       />
-
-// //       <input type="password" placeholder="Password"
-// //         onChange={(e) => setForm({...form, password: e.target.value})}
-// //       />
-
-// //       <button onClick={handleLogin}>Login</button>
-// //     </div>
-// //   );
-// // }
-
-// import { useState } from "react";
-// import API from "../services/api";
-// import { Eye, EyeOff } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
-// export default function Login() {
-//   const [form, setForm] = useState({
-//     username: "",
-//     password: "",
-//   });
-// const navigate = useNavigate();
-//   const [showPassword, setShowPassword] = useState(false);
-
-//   const handleLogin = async () => {
-//   try {
-//     const res = await API.post("/users/login/", {
-//       username: form.username,
-//       password: form.password,
-//     });
-
-//     console.log("LOGIN:", res.data);
-
-//     // ✅ store tokens
-//     localStorage.setItem("token", res.data.access);
-//     localStorage.setItem("refresh", res.data.refresh);
-
-//     navigate("/dashboard");
-
-//   } catch (err) {
-//     console.log(err.response?.data);
-//     alert("Invalid credentials");
-//   }
-// };
-// <div className="flex">
-  
-// </div>
-//   return (
-//     <div className="min-h-screen flex w-full">
-
-//       {/* 🔷 LEFT SIDE (IMAGE + TEXT) */}
-//       <div className="hidden md:flex w-1/2 relative scale-down">
-//         <img
-//           src="https://www.gyrus.com/wp-content/uploads/2024/07/2-2.webp"
-//           alt="bg"
-//           className="w-full h-full object-cover"
-//         />
-
-//         <div className="absolute inset-0 bg-black/50 flex flex-col justify-end p-10 text-white">
-//           <h1 className="text-3xl font-bold mb-3">
-//             Learn Smarter. Grow Faster.
-//           </h1>
-//           <h2 className="text-sm opacity-80">
-//             Access courses anytime, anywhere with our LMS platform.
-//           </h2>
-//         </div>
-//       </div>
-// <div className="flex">
-
-// </div>
-//       {/* 🔶 RIGHT SIDE (LOGIN FORM) */}
-//       <div className="flex w-full md:w-1/2 items-center justify-center bg-gray-100">
-
-//         <div className="bg-white p-8 rounded-2xl shadow-xl w-96">
-
-//           <h2 className="text-2xl font-bold mb-6 text-gray-800">
-//             Welcome Back 👋
-//           </h2>
-
-//           {/* USERNAME */}
-//           <input
-//             type="text"
-//             placeholder="Username"
-//             className="w-full border p-3 rounded mb-4 focus:ring-2 focus:ring-blue-400 outline-none"
-//             onChange={(e) =>
-//               setForm({ ...form, username: e.target.value })
-//             }
-//           />
-
-//           {/* PASSWORD */}
-//           <div className="relative mb-4">
-//             <input
-//               type={showPassword ? "text" : "password"}
-//               placeholder="Password"
-//               className="w-full border p-3 rounded focus:ring-2 focus:ring-blue-400 outline-none"
-//               onChange={(e) =>
-//                 setForm({ ...form, password: e.target.value })
-//               }
-//             />
-
-//             <button
-//               type="button"
-//               className="absolute right-3 top-3 text-gray-400"
-//               onClick={() => setShowPassword(!showPassword)}
-//             >
-//               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-//             </button>
-//           </div>
-
-//           {/* REMEMBER + FORGOT */}
-//           <div className="flex justify-between items-center text-sm mb-4">
-//             <label className="flex items-center gap-2">
-//               <input type="checkbox" />
-//               Remember me
-//             </label>
-//             <span className="text-blue-500 cursor-pointer">
-//               Forgot password?
-//             </span>
-//           </div>
-
-//           {/* LOGIN BUTTON */}
-//           <button
-//             onClick={handleLogin}
-//             className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
-//           >
-//             Login
-//           </button>
-
-//           {/* FOOTER */}
-//           <p className="text-center text-sm text-gray-500 mt-5">
-//             Don’t have an account?{" "}
-//             <span className="text-blue-500 cursor-pointer">
-//               Sign up
-//             </span>
-//           </p>
-
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -190,14 +19,11 @@ export default function Login() {
 
       console.log("LOGIN:", res.data);
 
-      // ✅ Store JWT tokens
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.role);
-localStorage.setItem(
-  "username",
-  res.data.username
-);
+      localStorage.setItem("username", res.data.username);
+
       navigate("/dashboard");
     } catch (err) {
       console.log(err.response?.data);
@@ -206,39 +32,93 @@ localStorage.setItem(
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
 
-      <div className="bg-white p-8 rounded-xl shadow-lg w-80">
+      <div className="bg-white p-10 rounded-2xl border border-gray-200 w-[360px]">
 
-        <h2 className="text-xl font-bold mb-5 text-center">
-          LMS Login
-        </h2>
+        {/* Header */}
+       
+<div className="text-center mb-8">
 
-        <input
-          type="text"
-          placeholder="Username"
-          className="w-full border p-2 mb-3 rounded"
-          onChange={(e) =>
-            setForm({ ...form, username: e.target.value })
-          }
-        />
+  <div className="flex justify-center mb-4">
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border p-2 mb-4 rounded"
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
-        />
+    <img
+      src="/logo.png"
+      alt="lms Logo"
+      className="w-24 h-24 object-contain"
+    />
 
+  </div>
+
+  <h2 className="text-2xl font-bold text-gray-900">
+    Welcome back
+  </h2>
+ <div className="fixed inset-0 pointer-events-none z-[9998] opacity-[0.06] grid place-items-center">
+        <div className="-rotate-12 text-6xl font-black text-slate-900">
+          AstraKalam LMS
+        </div>
+      </div>
+  <p className="text-sm text-gray-500 mt-1">
+    Sign in to your AstraKalam account
+  </p>
+
+</div>
+
+
+
+        {/* Username */}
+        <div className="mb-4">
+          <label className="block text-xs font-medium text-gray-500 mb-1.5 tracking-wide uppercase">
+            Username
+          </label>
+          <input
+            type="text"
+            placeholder="Enter your username"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+          />
+        </div>
+
+        {/* Password */}
+        <div className="mb-6">
+          <label className="block text-xs font-medium text-gray-500 mb-1.5 tracking-wide uppercase">
+            Password
+          </label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition"
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
+        </div>
+
+        {/* Login button */}
         <button
           onClick={handleLogin}
-          className="w-full bg-black text-white py-2 rounded"
+          className="w-full bg-blue-800 hover:bg-blue-900 text-blue-50 py-2.5 rounded-lg text-sm font-medium transition"
         >
           Login
         </button>
-<p className="text-center mt-4"> Don’t have an account?{" "} <span onClick={() => navigate("/register")} className="text-blue-500 cursor-pointer" > Register </span> </p> <p className="text-center mt-2"> <span onClick={() => navigate("/forgot-password") } className="text-blue-500 cursor-pointer" > Forgot Password? </span> </p>
+
+        {/* Footer links */}
+        <p className="text-center mt-5 text-sm text-gray-500">
+          Don't have an account?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            className="text-blue-600 font-medium cursor-pointer hover:underline"
+          >
+            Register
+          </span>
+        </p>
+        <p className="text-center mt-2">
+          <span
+            onClick={() => navigate("/forgot-password")}
+            className="text-sm text-blue-600 cursor-pointer hover:underline"
+          >
+            Forgot Password?
+          </span>
+        </p>
+
       </div>
     </div>
   );

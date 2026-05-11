@@ -129,7 +129,11 @@ export default function LessonBuilder({
           Add Lesson
         </button>
       </div>
-
+ <div className="fixed inset-0 pointer-events-none z-[9998] opacity-[0.06] grid place-items-center">
+        <div className="-rotate-12 text-6xl font-black text-slate-900">
+          AstraKalam LMS
+        </div>
+      </div>
       {/* LESSONS */}
       <div className="space-y-6">
 

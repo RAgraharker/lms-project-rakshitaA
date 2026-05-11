@@ -2,47 +2,97 @@ import { useState } from "react";
 import API from "../services/api";
 
 export default function ForgotPassword() {
-
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async () => {
+    if (!email) {
+      alert("Please enter your email");
+      return;
+    }
 
     try {
-
-      await API.post(
-        "/users/forgot-password/",
-        { username }
-      );
-
-      alert("Reset link sent");
-
-    } catch {
+      await API.post("/users/forgot-password/", { email });
+      alert("Reset link sent successfully");
+    } catch (error) {
+      console.error(error);
       alert("Error sending reset link");
     }
   };
 
   return (
-    <div className="p-10">
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
 
-      <h1 className="text-3xl font-bold mb-5">
-Forgot Password
-      </h1>
+        {/* Header */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="flex justify-center mb-4">
 
-      <input
-        type="text"
-        placeholder="Enter email"
-        className="border p-2 w-full mb-3"
-        onChange={(e) =>
-          setUsername(e.target.value)
-        }
-      />
+    <img
+      src="/logo.png"
+      alt="lms Logo"
+      className="w-10 h-10 object-contain"
+    />
 
-      <button
-        onClick={handleSubmit}
-        className="bg-black text-white px-5 py-2"
-      >
-        Send Reset Link
-      </button>
+  </div>
+            <span className="text-zinc-400 text-sm tracking-widest uppercase font-medium">
+              ASTRAKALAM
+            </span>
+          </div>
+
+          <h1 className="text-4xl font-bold text-white leading-tight">
+            Forgot your <br />
+            <span className="text-indigo-400">password?</span>
+          </h1>
+ <div className="fixed inset-0 pointer-events-none z-[9998] opacity-[0.06] grid place-items-center">
+        <div className="-rotate-12 text-6xl font-black text-yellow-300">
+  AstraKalam LMS
+
+        </div>
+      </div>
+          <p className="text-zinc-500 mt-3 text-sm leading-relaxed">
+            No worries. Enter your email and we'll send you a link to reset it.
+          </p>
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 space-y-5">
+
+          {/* Email Input */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+              Email
+            </label>
+
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-indigo-500 hover:bg-indigo-400 active:scale-[0.98] text-white font-semibold py-3 rounded-xl text-sm transition-all duration-150"
+          >
+            Send Reset Link
+          </button>
+        </div>
+
+        {/* Back to Login */}
+        <p className="text-center text-zinc-500 text-sm mt-6">
+          Remember it?{" "}
+          <a
+            href="/"
+            className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+          >
+            Back to sign in
+          </a>
+        </p>
+      </div>
     </div>
   );
 }

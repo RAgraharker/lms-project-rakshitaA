@@ -16,6 +16,7 @@ import dj_database_url
 import os
 from pathlib import Path
 from datetime import timedelta
+from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -98,12 +99,25 @@ EMAIL_HOST_PASSWORD = config(
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+        )
+    }
+elif DEBUG:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+        )
+    }
+else:
+    raise ImproperlyConfigured(
+        "DATABASE_URL must be set in production. Add a persistent PostgreSQL database on Render."
     )
-}
 
 
 # Password validation

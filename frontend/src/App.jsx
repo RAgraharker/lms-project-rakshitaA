@@ -12,7 +12,7 @@ import AdminUsers from './pages/AdminUsers';
 
 // ✅ Protected Route
 const ProtectedRoute = ({ children }) => {
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   if (!token) {
     return <Navigate to="/" replace />;

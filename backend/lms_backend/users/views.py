@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.db.models import Count
+from django.db import connection
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
@@ -820,6 +821,29 @@ def get_all_users(request):
     })
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def db_status(request):
+
+    if request.user.role != "super_admin":
+
+        return Response({
+            "error": "Unauthorized"
+        }, status=403)
+
+    db_settings = connection.settings_dict
+
+    return Response({
+        "database_engine": db_settings.get("ENGINE"),
+        "database_name": db_settings.get("NAME"),
+        "users": User.objects.count(),
+        "courses": Course.objects.count(),
+        "modules": Module.objects.count(),
+        "lessons": Lesson.objects.count(),
+        "enrollments": Enrollment.objects.count(),
+        "announcements": Announcement.objects.count(),
+    })
+    
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_user(request, pk):

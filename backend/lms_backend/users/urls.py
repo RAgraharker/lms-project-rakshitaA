@@ -24,7 +24,6 @@ from .views import (
     get_all_users,
     delete_user,
     admin_add_user,
-    db_status,
     open_lesson,
     delete_module,
     create_admin,
@@ -72,7 +71,6 @@ urlpatterns = [
     path('add-announcement/', add_announcement),
 
     path('all-users/', get_all_users),
-    path('db-status/', db_status),
     path('delete-user/<int:pk>/', delete_user),
     path('admin-add-user/', admin_add_user),
     path(

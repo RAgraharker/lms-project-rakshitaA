@@ -659,18 +659,6 @@ def register_user(request):
     username = request.data.get("username")
     password = request.data.get("password")
     role = request.data.get("role", "student")
-
-    if not username or not password:
-
-        return Response({
-            "error": "Email and password are required"
-        }, status=400)
-
-    if role not in ["student", "instructor"]:
-
-        return Response({
-            "error": "Invalid role"
-        }, status=400)
    
     if role == "super_admin":
 

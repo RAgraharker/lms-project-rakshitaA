@@ -12,7 +12,7 @@ export default function CoursePage() {
   const [course, setCourse] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
 
-  const role = localStorage.getItem("role");
+  const role = sessionStorage.getItem("role");
 
   const fetchCourse = async () => {
     try {

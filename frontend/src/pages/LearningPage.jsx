@@ -4,7 +4,7 @@ import API from "../services/api";
 import ScreenProtection from "../components/ScreenProtection";
 export default function LearningPage() {
   const { id } = useParams();
-  const role = localStorage.getItem("role");
+  const role = sessionStorage.getItem("role");
 
   const [modules, setModules] = useState([]);
   const [activeLesson, setActiveLesson] = useState(null);

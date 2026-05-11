@@ -35,6 +35,7 @@ from .views import (
 # ✅ IMPORT THESE
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTokenSerializer
+from backend.lms_backend.users import views
 
 
 # ✅ DEFINE THIS CLASS (YOU MISSED THIS)
@@ -49,6 +50,7 @@ urlpatterns = [
     path('forgot-password/', forgot_password),
     path('reset-password/<uidb64>/<token>/', reset_password),
     path('', home),
+    path("", views.api_home, name="api_home"),
     path('courses/', get_courses),
     path('add-course/', add_course),
     path('update-course/<int:pk>/', update_course),

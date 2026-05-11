@@ -37,6 +37,18 @@ from .serializers import (
     AnnouncementSerializer,
     LessonProgressSerializer
 )
+from django.http import JsonResponse
+
+def api_home(request):
+    return JsonResponse({
+        "message": "LMS API is running",
+        "endpoints": [
+            "/api/users/login/",
+            "/api/users/register/",
+            "/api/users/courses/",
+            "/api/users/all-users/",
+        ]
+    })
 
 
 

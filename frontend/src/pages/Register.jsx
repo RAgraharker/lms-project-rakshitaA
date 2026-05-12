@@ -424,58 +424,58 @@ export default function Register() {
           </div>
 
           {/* Role */}
-          <div className="space-y-1.5">
+<div className="space-y-1.5">
 
-            <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
-              Role
-            </label>
+  <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+    Role
+  </label>
 
-            <select
-              value={form.role}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer"
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  role: e.target.value,
-                })
-              }
-            >
-              <option value="student">
-                Student
-              </option>
+  <select
+    value={form.role}
+    className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer"
+    onChange={(e) =>
+      setForm({
+        ...form,
+        role: e.target.value,
+      })
+    }
+  >
+    <option value="student">
+      Student
+    </option>
 
-              <option value="instructor">
-                Instructor
-              </option>
+    <option value="instructor">
+      Instructor
+    </option>
 
-              <option value="super_admin">
-                Super Admin
-              </option>
-            </select>
-          </div>
+    <option value="super_admin">
+      Super Admin
+    </option>
+  </select>
+</div>
 
-          {/* Super Admin Token */}
-          {form.role === "super_admin" && (
-            <div className="space-y-1.5">
+{/* Super Admin Token */}
+{form.role === "super_admin" && (
+  <div className="space-y-1.5">
 
-              <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
-                Super Admin Token
-              </label>
+    <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+      Super Admin Token
+    </label>
 
-              <input
-                type="text"
-                value={form.adminToken}
-                placeholder="Enter admin token"
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    adminToken: e.target.value,
-                  })
-                }
-              />
-            </div>
-          )}
+    <input
+      type="text"
+      value={form.adminToken}
+      placeholder="Enter admin token"
+      className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+      onChange={(e) =>
+        setForm({
+          ...form,
+          adminToken: e.target.value,
+        })
+      }
+    />
+  </div>
+)}
 
           {/* Submit */}
           <button

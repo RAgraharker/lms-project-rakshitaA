@@ -6,8 +6,6 @@ import CourseModal from "./components/CourseModal";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import LearningPage from "./pages/LearningPage";
 import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
 import AdminUsers from './pages/AdminUsers';
 
 // ✅ Protected Route
@@ -36,11 +34,6 @@ function App() {
     element={<AnalyticsPage />}
   />
 <Route path="/register" element={<Register />} />
-<Route path="/forgot-password" element={<ForgotPassword />} />
-<Route
-  path="/reset-password/:uid/:token"
-  element={<ResetPassword />}
-/>
 
   <Route
     path="/dashboard"

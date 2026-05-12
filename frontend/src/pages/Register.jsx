@@ -313,7 +313,7 @@ export default function Register() {
     try {
       setLoading(true);
 
-      await API.post("register/", {
+      await API.post("/users/register/", {
         username: form.username,
         password: form.password,
         role: form.role,

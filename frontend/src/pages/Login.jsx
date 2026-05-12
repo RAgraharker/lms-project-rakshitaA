@@ -163,7 +163,7 @@ export default function Login() {
 
       console.log("LOGIN:", res.data);
 
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("username", res.data.username);
@@ -273,15 +273,6 @@ export default function Login() {
             className="text-blue-600 font-medium cursor-pointer hover:underline"
           >
             Register
-          </span>
-        </p>
-
-        <p className="text-center mt-2">
-          <span
-            onClick={() => navigate("/forgot-password")}
-            className="text-sm text-blue-600 cursor-pointer hover:underline"
-          >
-            Forgot Password?
           </span>
         </p>
 

@@ -127,7 +127,7 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
-const API = import.meta.env.VITE_API_URL;
+
 export default function Login() {
   const navigate = useNavigate();
 
@@ -156,7 +156,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await API.post("/users/login/", {
+      const res = await API.post("login/", {
         username: form.username,
         password: form.password,
       });

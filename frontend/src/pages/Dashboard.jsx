@@ -375,7 +375,7 @@ export default function Dashboard() {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const res = await API.get("/users/courses/");
+      const res = await API.get("courses/");
       setCourses(res.data);
     } catch (err) {
       console.log(err);

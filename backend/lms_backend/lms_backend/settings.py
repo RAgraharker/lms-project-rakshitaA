@@ -31,7 +31,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = ["lms-project-rakshitaa.onrender.com"]
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -157,4 +157,6 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://lms-project-rakshita-a.vercel.app/",
 ]
-
+CORS_ALLOW_HEADERS = [
+    "*",
+]

@@ -17,7 +17,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 import os
-
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from pprint import pprint
 from django.http import HttpResponse
 from decouple import config
 from django.contrib.auth import get_user_model
@@ -734,29 +736,104 @@ def forgot_password(request):
             "error": "User not found"
         }, status=404)
 
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    token = default_token_generator.make_token(user)
-
-    FRONTEND_URL = os.getenv(
-        "FRONTEND_URL",
-        "https://lms-project-rakshita-jftlezsva.vercel.app/"
-    )
-
-    reset_link = f"{FRONTEND_URL}/reset-password/{uid}/{token}/"
-
     try:
 
-        send_mail(
-    subject="LMS Password Reset",
-    message=f"Click here to reset password:\n{reset_link}",
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    recipient_list=[email],
-    fail_silently=False,
-)
+        # Generate reset token
+        uid = urlsafe_base64_encode(
+            force_bytes(user.pk)
+        )
+
+        token = default_token_generator.make_token(user)
+
+        FRONTEND_URL = os.getenv(
+            "FRONTEND_URL",
+            "https://lms-project-rakshita-jftlezsva.vercel.app"
+        )
+
+        reset_link = (
+            f"{FRONTEND_URL}/reset-password/"
+            f"{uid}/{token}/"
+        )
+
+        # Brevo API Configuration
+        configuration = sib_api_v3_sdk.Configuration()
+
+        configuration.api_key['api-key'] = os.getenv(
+            "BREVO_API_KEY"
+        )
+
+        api_instance = (
+            sib_api_v3_sdk.TransactionalEmailsApi(
+                sib_api_v3_sdk.ApiClient(
+                    configuration
+                )
+            )
+        )
+
+        subject = "AstraKalam LMS Password Reset"
+
+        html_content = f"""
+        <html>
+            <body style="font-family: Arial;">
+                <h2>AstraKalam LMS</h2>
+
+                <p>
+                    Click the button below to reset your password:
+                </p>
+
+                <a
+                    href="{reset_link}"
+                    style="
+                        display:inline-block;
+                        padding:12px 20px;
+                        background:#6366f1;
+                        color:white;
+                        text-decoration:none;
+                        border-radius:8px;
+                    "
+                >
+                    Reset Password
+                </a>
+
+                <p style="margin-top:20px;">
+                    If you did not request this,
+                    please ignore this email.
+                </p>
+            </body>
+        </html>
+        """
+
+        sender = {
+            "name": "AstraKalam LMS",
+            "email": os.getenv("BREVO_SENDER_EMAIL")
+        }
+
+        to = [{
+            "email": email
+        }]
+
+        send_smtp_email = (
+            sib_api_v3_sdk.SendSmtpEmail(
+                to=to,
+                html_content=html_content,
+                sender=sender,
+                subject=subject
+            )
+        )
+
+        api_instance.send_transac_email(
+            send_smtp_email
+        )
 
         return Response({
-            "message": "Password reset email sent"
+            "message": "Reset email sent successfully"
         })
+
+    except ApiException as e:
+
+        return Response({
+            "error": f"Brevo API Error: {str(e)}"
+        }, status=500)
 
     except Exception as e:
 

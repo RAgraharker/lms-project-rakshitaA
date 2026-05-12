@@ -747,7 +747,7 @@ def forgot_password(request):
 
         FRONTEND_URL = os.getenv(
             "FRONTEND_URL",
-            "https://lms-project-rakshita-a.vercel.app/"
+            "https://lms-project-raks-git-3e14c7-rakshitaagraharker10-2834s-projects.vercel.app/"
         )
 
         reset_link = (

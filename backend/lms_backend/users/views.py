@@ -17,10 +17,14 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 import os
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
+
 from django.http import HttpResponse
 from decouple import config
+from django.contrib.auth import get_user_model
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .serializers import UserSerializer
 from .models import (
     User,
@@ -655,12 +659,17 @@ def add_announcement(request):
     )
 
 
+User = get_user_model()
+
+SUPER_ADMIN_TOKEN = "txtyou345"
+
 @api_view(['POST'])
 def register_user(request):
 
     username = request.data.get("username")
     password = request.data.get("password")
-    role = request.data.get("role")
+    role = request.data.get("role", "student")
+    admin_token = request.data.get("adminToken")
 
     if not username or not password:
         return Response(
@@ -668,6 +677,7 @@ def register_user(request):
             status=400
         )
 
+    # Validate email
     try:
         validate_email(username)
     except ValidationError:
@@ -676,12 +686,23 @@ def register_user(request):
             status=400
         )
 
+    # Check existing user
     if User.objects.filter(username=username).exists():
         return Response(
             {"error": "User already exists"},
             status=400
         )
 
+    # Super admin token validation
+    if role == "super_admin":
+
+        if admin_token != SUPER_ADMIN_TOKEN:
+            return Response(
+                {"error": "Invalid super admin token"},
+                status=403
+            )
+
+    # Create user
     user = User.objects.create_user(
         username=username,
         email=username,
@@ -692,7 +713,7 @@ def register_user(request):
     user.save()
 
     return Response({
-        "message": "User registered successfully"
+        "message": "Registered Successfully"
     })
     
 @api_view(['POST'])

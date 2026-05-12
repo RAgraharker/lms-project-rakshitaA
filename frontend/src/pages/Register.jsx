@@ -282,6 +282,7 @@ export default function Register() {
     username: "",
     password: "",
     role: "student",
+      adminToken: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -303,7 +304,12 @@ export default function Register() {
     try {
       setLoading(true);
 
-      await API.post("/users/register/", form);
+      await API.post("/users/register/", {
+  username: form.username,
+  password: form.password,
+  role: form.role,
+  adminToken: form.adminToken,
+});
 
       alert("Registered Successfully");
       navigate("/");
@@ -418,7 +424,29 @@ export default function Register() {
               }
             >
               <option value="student">Student</option>
+              <option value="super_admin">Super Admin</option>
               <option value="instructor">Instructor</option>
+              {/* Super Admin Token */}
+{form.role === "super_admin" && (
+  <div className="space-y-1.5">
+    <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+      Super Admin Token
+    </label>
+
+    <input
+      type="text"
+      value={form.adminToken}
+      placeholder="Enter admin token"
+      className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+      onChange={(e) =>
+        setForm({
+          ...form,
+          adminToken: e.target.value,
+        })
+      }
+    />
+  </div>
+)}
             </select>
           </div>
 

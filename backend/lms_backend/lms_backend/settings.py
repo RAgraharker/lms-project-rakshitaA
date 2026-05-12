@@ -30,7 +30,11 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["lms-project-rakshitaa.onrender.com"]
+ALLOWED_HOSTS = [
+    "lms-project-rakshitaa.onrender.com",
+    "127.0.0.1",
+    "localhost"
+]
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
@@ -151,10 +155,11 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://lms-project-rakshita-a.vercel.app/",
+    "https://lms-project-rakshita-a.vercel.app"
 ]
+
 CSRF_TRUSTED_ORIGINS = [
-    "https://lms-project-rakshita-a.vercel.app/",
+    "https://lms-project-rakshita-a.vercel.app"
 ]
 CORS_ALLOW_HEADERS = [
     "*",

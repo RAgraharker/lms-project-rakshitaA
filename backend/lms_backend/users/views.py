@@ -747,12 +747,12 @@ def forgot_password(request):
     try:
 
         send_mail(
-            subject="LMS Password Reset",
-            message=f"Click here to reset password:\n{reset_link}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[user.username],
-            fail_silently=False,
-        )
+    subject="LMS Password Reset",
+    message=f"Click here to reset password:\n{reset_link}",
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    recipient_list=[email],
+    fail_silently=False,
+)
 
         return Response({
             "message": "Password reset email sent"

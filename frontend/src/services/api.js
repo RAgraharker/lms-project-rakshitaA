@@ -7,23 +7,7 @@ const API = axios.create({
   },
 });
 
-
-// ✅ Attach JWT token
 API.interceptors.request.use((req) => {
-  const publicPaths = [
-    "/users/login/",
-    "/users/register/",
-    "/users/forgot-password/",
-    "/users/reset-password/",
-  ];
-
-  const isPublicPath = publicPaths.some((path) => req.url?.startsWith(path));
-
-  if (isPublicPath) {
-    delete req.headers.Authorization;
-    return req;
-  }
-
   const token = localStorage.getItem("token");
 
   if (token) {
@@ -33,17 +17,18 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// ✅ Auto logout on token expiry
 API.interceptors.response.use(
   (res) => res,
   (err) => {
+    console.log(err.response);
+
     if (err.response?.status === 401) {
       localStorage.clear();
       window.location.href = "/";
     }
+
     return Promise.reject(err);
   }
 );
 
 export default API;
-

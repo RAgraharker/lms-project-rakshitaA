@@ -727,7 +727,8 @@ def forgot_password(request):
         }, status=400)
 
     try:
-        user = User.objects.get(username=email)  # username = email
+        user = User.objects.get(username=email)
+
     except User.DoesNotExist:
         return Response({
             "error": "User not found"
@@ -736,21 +737,32 @@ def forgot_password(request):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
 
-    FRONTEND_URL = os.getenv("FRONTEND_URL", "https://lms-project-rakshita-a.vercel.app/")
+    FRONTEND_URL = os.getenv(
+        "FRONTEND_URL",
+        "https://your-vercel-app.vercel.app"
+    )
 
     reset_link = f"{FRONTEND_URL}/reset-password/{uid}/{token}/"
 
-    send_mail(
-        subject="LMS Password Reset",
-        message=f"Click here to reset password:\n{reset_link}",
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[user.username],  # email
-        fail_silently=False,
-    )
+    try:
 
-    return Response({
-        "message": "Password reset email sent"
-    })
+        send_mail(
+            subject="LMS Password Reset",
+            message=f"Click here to reset password:\n{reset_link}",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.username],
+            fail_silently=False,
+        )
+
+        return Response({
+            "message": "Password reset email sent"
+        })
+
+    except Exception as e:
+
+        return Response({
+            "error": str(e)
+        }, status=500)
     
 @api_view(['POST'])
 def reset_password(request, uidb64, token):
@@ -762,24 +774,48 @@ def reset_password(request, uidb64, token):
 
         user = User.objects.get(pk=uid)
 
-    except:
+    except Exception:
         return Response({
-            "error": "Invalid link"
+            "error": "Invalid reset link"
         }, status=400)
 
+    # Check token validity
     if not default_token_generator.check_token(user, token):
+
         return Response({
             "error": "Invalid or expired token"
         }, status=400)
 
+    # Get new password
     new_password = request.data.get("password")
 
-    user.set_password(new_password)
-    user.save()
+    if not new_password:
 
-    return Response({
-        "message": "Password reset successful"
-    }) 
+        return Response({
+            "error": "Password is required"
+        }, status=400)
+
+    # Optional minimum length validation
+    if len(new_password) < 6:
+
+        return Response({
+            "error": "Password must be at least 6 characters"
+        }, status=400)
+
+    try:
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({
+            "message": "Password reset successful"
+        })
+
+    except Exception as e:
+
+        return Response({
+            "error": str(e)
+        }, status=500)
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

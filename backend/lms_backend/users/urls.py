@@ -49,6 +49,7 @@ urlpatterns = [
 
     path('forgot-password/', forgot_password),
     path('reset-password/<uidb64>/<token>/', reset_password),
+    
     path("", api_home, name="api_home"),
     path('courses/', get_courses),
     path('add-course/', add_course),

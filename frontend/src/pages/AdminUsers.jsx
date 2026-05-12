@@ -256,7 +256,7 @@ export default function AdminUsers() {
   });
 
   const [form, setForm] = useState({
-    username: "",
+    email: "",
     password: "",
     role: "student",
   });

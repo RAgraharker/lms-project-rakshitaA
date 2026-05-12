@@ -17,6 +17,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 import os
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from decouple import config
 from .serializers import UserSerializer
@@ -658,32 +660,40 @@ def register_user(request):
 
     username = request.data.get("username")
     password = request.data.get("password")
-    role = request.data.get("role", "student")
-   
-    if role == "super_admin":
+    role = request.data.get("role")
 
-     return Response({
-        "error":
-        "cannot  register as super_admin"
-    }, status=403)
+    if not username or not password:
+        return Response(
+            {"error": "Email and password are required"},
+            status=400
+        )
 
+    try:
+        validate_email(username)
+    except ValidationError:
+        return Response(
+            {"error": "Enter valid email address"},
+            status=400
+        )
 
     if User.objects.filter(username=username).exists():
-        return Response({
-            "error": "Username already exists"
-        }, status=400)
+        return Response(
+            {"error": "User already exists"},
+            status=400
+        )
 
     user = User.objects.create_user(
         username=username,
-        password=password,
-        role=role
+        email=username,
+        password=password
     )
 
+    user.role = role
+    user.save()
+
     return Response({
-        "message": "User registered successfully",
-        "username": user.username
+        "message": "User registered successfully"
     })
-    
     
 @api_view(['POST'])
 def forgot_password(request):

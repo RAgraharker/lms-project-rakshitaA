@@ -77,7 +77,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lms_backend.wsgi.application'
-CORS_ALLOW_ALL_ORIGINS = True
+
 AUTH_USER_MODEL = 'users.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -153,5 +153,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 CORS_ALLOWED_ORIGINS = [
     "https://lms-project-rakshita-njo5bz7i0.vercel.app",
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://lms-project-rakshita-njo5bz7i0.vercel.app",
+]
 

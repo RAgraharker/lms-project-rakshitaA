@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
- baseURL: "https://lms-project-rakshitaa.onrender.com/api",
+  baseURL: "https://lms-project-rakshitaa.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,19 +16,5 @@ API.interceptors.request.use((req) => {
 
   return req;
 });
-
-API.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    console.log(err.response);
-
-    if (err.response?.status === 401) {
-      localStorage.clear();
-      window.location.href = "/";
-    }
-
-    return Promise.reject(err);
-  }
-);
 
 export default API;

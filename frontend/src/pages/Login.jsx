@@ -156,7 +156,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await API.post("login/", {
+      const res = await API.post("/users/login/", {
         username: form.username,
         password: form.password,
       });

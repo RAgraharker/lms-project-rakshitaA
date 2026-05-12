@@ -15,7 +15,11 @@ export default function ForgotPassword() {
       alert("Reset link sent successfully");
     } catch (error) {
       console.error(error);
-      alert("Error sending reset link");
+      alert(
+  error.response?.data?.error ||
+  error.response?.data?.detail ||
+  "Error sending reset link"
+);
     }
   };
 

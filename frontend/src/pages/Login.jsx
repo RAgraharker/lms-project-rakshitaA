@@ -163,7 +163,7 @@ export default function Login() {
 
       console.log("LOGIN:", res.data);
 
-      localStorage.setItem("token", res.data.access);
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("username", res.data.username);

@@ -151,9 +151,9 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://lms-project-rakshita-njo5bz7i0.vercel.app",
+    "https://lms-project-rakshita-a.vercel.app/",
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://lms-project-rakshita-njo5bz7i0.vercel.app",
+    "https://lms-project-rakshita-a.vercel.app/",
 ]
 

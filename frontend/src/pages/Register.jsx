@@ -270,7 +270,6 @@
 //     </div>
 //   );
 // }
-
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
@@ -282,12 +281,13 @@ export default function Register() {
     username: "",
     password: "",
     role: "student",
-      adminToken: "",
+    adminToken: "",
   });
 
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
+
     if (!form.username || !form.password) {
       alert("Please fill all fields");
       return;
@@ -301,26 +301,38 @@ export default function Register() {
       return;
     }
 
+    // Super admin token validation
+    if (
+      form.role === "super_admin" &&
+      !form.adminToken
+    ) {
+      alert("Enter super admin token");
+      return;
+    }
+
     try {
       setLoading(true);
 
       await API.post("/users/register/", {
-  username: form.username,
-  password: form.password,
-  role: form.role,
-  adminToken: form.adminToken,
-});
+        username: form.username,
+        password: form.password,
+        role: form.role,
+        adminToken: form.adminToken,
+      });
 
       alert("Registered Successfully");
+
       navigate("/");
+
     } catch (err) {
       console.error(err);
 
       alert(
         err.response?.data?.error ||
-          err.response?.data?.detail ||
-          "Registration failed"
+        err.response?.data?.detail ||
+        "Registration failed"
       );
+
     } finally {
       setLoading(false);
     }
@@ -340,6 +352,7 @@ export default function Register() {
 
         {/* Header */}
         <div className="mb-10">
+
           <div className="flex items-center gap-2 mb-6">
             <div className="w-7 h-7 rounded-full bg-indigo-500" />
 
@@ -355,6 +368,7 @@ export default function Register() {
 
           <p className="text-zinc-500 mt-2 text-sm">
             Already have one?{" "}
+
             <Link
               to="/"
               className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
@@ -369,6 +383,7 @@ export default function Register() {
 
           {/* Email */}
           <div className="space-y-1.5">
+
             <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
               Email
             </label>
@@ -389,6 +404,7 @@ export default function Register() {
 
           {/* Password */}
           <div className="space-y-1.5">
+
             <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
               Password
             </label>
@@ -409,6 +425,7 @@ export default function Register() {
 
           {/* Role */}
           <div className="space-y-1.5">
+
             <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
               Role
             </label>
@@ -423,32 +440,42 @@ export default function Register() {
                 })
               }
             >
-              <option value="student">Student</option>
-              <option value="super_admin">Super Admin</option>
-              <option value="instructor">Instructor</option>
-              {/* Super Admin Token */}
-{form.role === "super_admin" && (
-  <div className="space-y-1.5">
-    <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
-      Super Admin Token
-    </label>
+              <option value="student">
+                Student
+              </option>
 
-    <input
-      type="text"
-      value={form.adminToken}
-      placeholder="Enter admin token"
-      className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
-      onChange={(e) =>
-        setForm({
-          ...form,
-          adminToken: e.target.value,
-        })
-      }
-    />
-  </div>
-)}
+              <option value="instructor">
+                Instructor
+              </option>
+
+              <option value="super_admin">
+                Super Admin
+              </option>
             </select>
           </div>
+
+          {/* Super Admin Token */}
+          {form.role === "super_admin" && (
+            <div className="space-y-1.5">
+
+              <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">
+                Super Admin Token
+              </label>
+
+              <input
+                type="text"
+                value={form.adminToken}
+                placeholder="Enter admin token"
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    adminToken: e.target.value,
+                  })
+                }
+              />
+            </div>
+          )}
 
           {/* Submit */}
           <button
@@ -456,7 +483,9 @@ export default function Register() {
             disabled={loading}
             className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] text-white font-semibold py-3 rounded-xl text-sm transition-all duration-150 mt-2"
           >
-            {loading ? "Creating Account..." : "Create Account"}
+            {loading
+              ? "Creating Account..."
+              : "Create Account"}
           </button>
         </div>
 
